@@ -16,8 +16,8 @@ class StochasticModel:
 
 
     def compute_next_xt(self, x_t1, t1, delta_t):
-        X_t2 = x_t1 + delta_t * (self.coeff_dt(x_t1, t1)) + self.coeff_dw(x_t1, t1) * self.coeff_dw(x_t1, t1)
-        return X_t2
+        x_t2 = x_t1 + delta_t * (self.coeff_dt(x_t1, t1)) + self.coeff_dw(x_t1, t1) * self.coeff_dw(x_t1, t1)
+        return x_t2
 
     def simulate(self, t1, t2, steps=100):
         assert t1==self.initial_condition.t, (f"The initial condition must be {self.initial_condition.t}, "
@@ -34,6 +34,6 @@ class StochasticModel:
         return time_space, x_space
 
     @staticmethod
-    def compute_dw(self, delta_t):
+    def compute_dw(delta_t):
         dw = np.random.normal(loc=0.0, scale=np.sqrt(delta_t))
         return dw
