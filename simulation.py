@@ -29,7 +29,7 @@ class StochasticModel:
         x_space = np.zeros_like(time_space)
         x_space[0] = self.initial_condition.x_t
         for i, t in enumerate(time_space[1:]):
-            x_space[i+1] = self.compute_next_xt(x_space, t, del_t)
+            x_space[i+1] = self.compute_next_xt(x_space[i], t, del_t)
 
         return time_space, x_space
 
@@ -37,3 +37,12 @@ class StochasticModel:
     def compute_dw(delta_t):
         dw = np.random.normal(loc=0.0, scale=np.sqrt(delta_t))
         return dw
+
+if __name__=='__main__':
+    coeff_dt = lambda x_t1=None, t1=None: 0.01
+    coeff_dw = lambda x_t1=None, t1=None: 0.01
+    model = StochasticModel(coeff_dt, coeff_dw, InitialCondition(0, 0))
+    t, x = model.simulate(0, 1, 200)
+    print(t.shape, x.shape)
+    print(t)
+    print(x)
