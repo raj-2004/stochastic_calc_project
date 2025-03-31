@@ -26,12 +26,12 @@ class StochasticModel:
         time_space = np.linspace(t1,t2,n)
         del_t = time_space[1]-time_space[0]
 
-        X_space = np.zeros_like(time_space)
-        X_space[0] = self.initial_condition.x_t
+        x_space = np.zeros_like(time_space)
+        x_space[0] = self.initial_condition.x_t
         for i, t in enumerate(time_space[1:]):
-            X_space[i+1] = self.compute_next_xt(X_space, t, del_t)
+            x_space[i+1] = self.compute_next_xt(x_space, t, del_t)
 
-        return time_space, X_space
+        return time_space, x_space
 
     @staticmethod
     def compute_dw(self, delta_t):
