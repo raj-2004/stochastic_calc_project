@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -16,7 +17,7 @@ class StochasticModel:
 
 
     def compute_next_xt(self, x_t1, t1, delta_t):
-        x_t2 = x_t1 + delta_t * (self.coeff_dt(x_t1, t1)) + self.coeff_dw(x_t1, t1) * self.coeff_dw(x_t1, t1)
+        x_t2 = x_t1 + delta_t * (self.coeff_dt(x_t1, t1)) + self.coeff_dw(x_t1, t1) * self.compute_dw(delta_t)
         return x_t2
 
     def simulate(self, t1, t2, steps=100):
@@ -39,10 +40,14 @@ class StochasticModel:
         return dw
 
 if __name__=='__main__':
-    coeff_dt = lambda x_t1=None, t1=None: 0.01
-    coeff_dw = lambda x_t1=None, t1=None: 0.01
+    coeff_dt_constant = 0.05
+    coeff_dw_constant = 0.1
+    coeff_dt = lambda x_t1=None, t1=None: coeff_dt_constant
+    coeff_dw = lambda x_t1=None, t1=None: coeff_dw_constant
     model = StochasticModel(coeff_dt, coeff_dw, InitialCondition(0, 0))
     t, x = model.simulate(0, 1, 200)
     print(t.shape, x.shape)
     print(t)
     print(x)
+    plt.plot(t, x)
+    plt.show()
