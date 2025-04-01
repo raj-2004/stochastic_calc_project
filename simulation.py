@@ -2,7 +2,25 @@ from dataclasses import dataclass
 
 import matplotlib.pyplot as plt
 import numpy as np
+import torch
 
+
+class DerivableFunction:
+    def __init__(self, callable_function):
+        self.forward = callable_function
+
+    def __call__(self, x_t1):
+        if not isinstance(x_t1, torch.Tensor):
+            x_t1 = torch.tensor(x_t1, requires_grad=True)
+        return self.forward(x_t1)
+
+    def derivative(self, x_t1):
+        if not isinstance(x_t1, torch.Tensor):
+            x_t1 = torch.tensor(x_t1, requires_grad=True)
+        _y = self(x_t1)
+        _y.backward()
+        _grad = x_t1.grad
+        return _grad
 
 @dataclass
 class InitialCondition:
@@ -40,14 +58,28 @@ class StochasticModel:
         return dw
 
 if __name__=='__main__':
-    coeff_dt_constant = 0.05
-    coeff_dw_constant = 0.1
-    coeff_dt = lambda x_t1=None, t1=None: coeff_dt_constant
-    coeff_dw = lambda x_t1=None, t1=None: coeff_dw_constant
-    model = StochasticModel(coeff_dt, coeff_dw, InitialCondition(0, 0))
-    t, x = model.simulate(0, 1, 200)
-    print(t.shape, x.shape)
-    print(t)
-    print(x)
-    plt.plot(t, x)
-    plt.show()
+    pass
+
+    #region Checking DerivableFunction
+    # coeff_dt_constant = 0.05
+    # coeff_dw_constant = 0.1
+
+    # def coeff_dw(x_t1, **kwargs):
+    #     return coeff_dw_constant*x_t1
+    # dw_func = DerivableFunction(coeff_dw)
+    # dy = dw_func.derivative(x_t1=10.0)
+    #endregion
+
+    #region Checking StochasticModel
+    # coeff_dt_constant = 0.05
+    # coeff_dw_constant = 0.1
+    # coeff_dt = lambda x_t1=None, t1=None: coeff_dt_constant
+    # coeff_dw = lambda x_t1=None, t1=None: coeff_dw_constant*t1**2+t1
+    # model = StochasticModel(coeff_dt, coeff_dw, InitialCondition(0, 0))
+    # t, x = model.simulate(0, 4, 200)
+    # print(t.shape, x.shape)
+    # print(t)
+    # print(x)
+    # plt.plot(t, x)
+    # plt.show()
+    #endregion
